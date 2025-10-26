@@ -1,29 +1,18 @@
-from pydantic_settings import BaseSettings
-from pydantic import AnyHttpUrl
+import os
+from dotenv import load_dotenv
 
-class Settings(BaseSettings):
-    app_host: str = "0.0.0.0"
-    app_port: int = 8000
-    app_debug: bool = True
-    cors_origins: str = "*"  # comma-separated or *
+load_dotenv()
 
-    neo4j_uri: str = "bolt://neo4j:7687"
-    neo4j_user: str = "neo4j"
-    neo4j_pass: str = "changeme"
+class Settings:
+    AUTH_MODE = os.getenv("AUTH_MODE", "dev")  # "dev" ou "auth0"
+    DEV_JWT_SECRET = os.getenv("DEV_JWT_SECRET", "devsecret")
 
-    mqtt_host: str = "mqtt"
-    mqtt_port: int = 1883
-    mqtt_topic_base: str = "home"
+    AUTH0_DOMAIN = os.getenv("AUTH0_DOMAIN")
+    AUTH0_AUDIENCE = os.getenv("AUTH0_AUDIENCE")
+    AUTH0_ISSUER = os.getenv("AUTH0_ISSUER")
 
-    auth_mode: str = "dev"  # dev | auth0
-    dev_jwt_secret: str = "devsecret"
-
-    auth0_domain: str | None = None
-    auth0_audience: str | None = None
-    auth0_issuer: AnyHttpUrl | None = None
-
-    class Config:
-        env_file = ".env"
-        case_sensitive = False
+    NEO4J_URI = os.getenv("NEO4J_URI")
+    NEO4J_USER = os.getenv("NEO4J_USER")
+    NEO4J_PASS = os.getenv("NEO4J_PASS")
 
 settings = Settings()

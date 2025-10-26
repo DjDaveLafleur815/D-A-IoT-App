@@ -1,10 +1,12 @@
 class Sensor {
-  final String id;
-  final String type;
-  final String deviceId;
+  final String name;
+  final String unit;
+  final String device;
+  Sensor({required this.name, required this.unit, required this.device});
 
-  Sensor({required this.id, required this.type, required this.deviceId});
-
-  factory Sensor.fromJson(Map<String, dynamic> j) =>
-      Sensor(id: j['id'], type: j['type'], deviceId: j['device_id']);
+  factory Sensor.fromJson(Map<String, dynamic> json) => Sensor(
+        name: json["sensor"] ?? json["name"] ?? "",
+        unit: json["unit"] ?? "",
+        device: json["device"] ?? "",
+      );
 }

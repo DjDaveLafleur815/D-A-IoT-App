@@ -1,31 +1,21 @@
-from fastapi import APIRouter, Depends, HTTPException
-from ..models.dto import DeviceCreate, DeviceOut
-from ..neo4j_client import get_driver
-from ..auth.deps import get_current_user
+from fastapi import APIRouter, Depends
+from app.models.dto import DeviceDTO
+from app.neo4j_client import get_db
 
-router = APIRouter(prefix="/devices", tags=["devices"])
+router = APIRouter(prefix="/devices")
 
-@router.post("", response_model=DeviceOut)
-def create_device(dev: DeviceCreate, _=Depends(get_current_user)):
-    with get_driver().session() as s:
-        res = s.run("""
-            MATCH (r:Room {id:$room_id})
-            MERGE (d:Device {id:$id})
-            ON CREATE SET d.name=$name
-            ON MATCH SET d.name=$name
-            MERGE (r)-[:CONTAINS]->(d)
-            RETURN d.id AS id, d.name AS name, r.id AS room_id
-        """, id=dev.id, name=dev.name, room_id=dev.room_id).single()
-        if not res:
-            raise HTTPException(404, "Room not found")
-        return DeviceOut(id=res["id"], name=res["name"], room_id=res["room_id"])
+@router.post("/")
+def create_device(body: DeviceDTO, db=Depends(get_db)):
+    db.run("""
+        MATCH (r:Room {name:$room})
+        CREATE (d:Device {name:$name, type:$type})-[:INSTALLED_IN]->(r)
+    """, name=body.name, type=body.type, room=body.room)
+    return {"ok": True}
 
-@router.get("", response_model=list[DeviceOut])
-def list_devices(_=Depends(get_current_user)):
-    with get_driver().session() as s:
-        res = s.run("""
-            MATCH (r:Room)-[:CONTAINS]->(d:Device)
-            RETURN d.id AS id, d.name AS name, r.id AS room_id
-            ORDER BY id
-        """)
-        return [DeviceOut(id=r["id"], name=r["name"], room_id=r["room_id"]) for r in res]
+@router.get("/")
+def list_devices(db=Depends(get_db)):
+    res = db.run("""
+        MATCH (d:Device)-[:INSTALLED_IN]->(r:Room)
+        RETURN d.name AS device, d.type AS type, r.name AS room
+    """)
+    return list(res)

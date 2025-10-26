@@ -1,41 +1,34 @@
-from fastapi import APIRouter, HTTPException, Depends
-from jose import jwt
-from datetime import datetime, timedelta, timezone
-from ..models.dto import UserCreate, UserOut
-from ..neo4j_client import get_driver
-from ..config import settings
-from ..auth.deps import get_current_user
+from fastapi import APIRouter, Depends, HTTPException
+from app.models.dto import UserDTO
+from app.neo4j_client import get_db
+import jwt
+from app.config import settings
+from app.auth.deps import get_user_token
 
-router = APIRouter(prefix="/users", tags=["users"])
+router = APIRouter(prefix="/users")
 
-@router.post("/register", response_model=UserOut)
-def register(user: UserCreate):
-    """Dev-mode registration: store User in Neo4j."""
-    with get_driver().session() as s:
-        r = s.run("""
-            MERGE (u:User {email: $email})
-            ON CREATE SET u.display_name=$display_name
-            RETURN u.email AS email, u.display_name AS display_name
-        """, email=user.email, display_name=user.display_name)
-        rec = r.single()
-        return UserOut(email=rec["email"], display_name=rec["display_name"])
+@router.post("/register")
+def register(body: UserDTO, db=Depends(get_db)):
+    db.run("""
+        CREATE (u:User {email:$email, password:$password})
+    """, email=body.email, password=body.password)
+
+    return {"ok": True}
 
 @router.post("/login")
-def login(user: UserCreate):
-    """Dev-mode login: returns a signed JWT to use as Bearer token."""
-    if settings.auth_mode != "dev":
-        raise HTTPException(400, "login endpoint only for dev mode")
+def login(body: UserDTO, db=Depends(get_db)):
+    res = db.run("""
+        MATCH (u:User {email:$email, password:$password})
+        RETURN u LIMIT 1
+    """, email=body.email, password=body.password).single()
 
-    payload = {
-        "sub": user.email,
-        "email": user.email,
-        "name": user.display_name or user.email.split("@")[0],
-        "iat": int(datetime.now(tz=timezone.utc).timestamp()),
-        "exp": int((datetime.now(tz=timezone.utc) + timedelta(hours=8)).timestamp())
-    }
-    token = jwt.encode(payload, settings.dev_jwt_secret, algorithm="HS256")
-    return {"access_token": token, "token_type": "bearer"}
+    if not res:
+        raise HTTPException(401, "Invalid credentials")
 
-@router.get("/me", response_model=UserOut)
-def me(claims=Depends(get_current_user)):
-    return UserOut(email=claims.get("email"), display_name=claims.get("name"))
+    token = jwt.encode({"sub": body.email}, settings.DEV_JWT_SECRET, algorithm="HS256")
+
+    return {"token": token}
+
+@router.get("/me")
+def me(user=Depends(get_user_token)):
+    return {"user": user}

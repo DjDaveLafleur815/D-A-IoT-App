@@ -1,3 +1,5 @@
+# utilisé seulement en mode Auth0
+# ton futur JWKS live
 import httpx
 from functools import lru_cache
 from . import jwks

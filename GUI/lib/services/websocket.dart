@@ -1,31 +1,34 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import '../globals/endpoints.dart';
 
-class WS {
-  WebSocketChannel? _ch;
-  final _controller = StreamController<String>.broadcast();
+class WsService {
+  WsService._();
+  static final WsService I = WsService._();
 
-  Stream<String> get stream => _controller.stream;
+  WebSocketChannel? _ch;
+  final _controller = StreamController<Map<String, dynamic>>.broadcast();
+
+  Stream<Map<String, dynamic>> get stream => _controller.stream;
 
   void connect() {
-    close();
-    _ch = WebSocketChannel.connect(Uri.parse(Endpoints.socket));
-    _ch!.stream.listen(
-      (event) => _controller.add(event.toString()),
-      onError: (e) => _controller.addError(e),
-      onDone: () {
-        // try reconnect simple
-        Future.delayed(const Duration(seconds: 2), () => connect());
-      },
-    );
+    disconnect();
+    _ch = WebSocketChannel.connect(Uri.parse(Endpoints.ws));
+    _ch!.stream.listen((raw) {
+      try {
+        final data = jsonDecode(raw);
+        if (data is Map<String, dynamic>) {
+          _controller.add(data);
+        }
+      } catch (_) {}
+    }, onError: (_) {
+      // tenter reconnect après un délai ?
+    }, onDone: () {});
   }
 
-  void send(String s) => _ch?.sink.add(s);
-  void close() {
+  void disconnect() {
     _ch?.sink.close();
     _ch = null;
   }
 }
-
-final ws = WS();

@@ -1,20 +1,24 @@
+import 'dart:io';
+
+/// Base API + WS URLs.
+/// - iOS Simulator: localhost
+/// - Android Emulator: 10.0.2.2
 class Endpoints {
-  // Adapte selon ta machine/émulateur
-  static const String apiBase = String.fromEnvironment(
-    'API_BASE',
-    defaultValue: 'http://localhost:8000',
-  );
+  static String get _host {
+    if (Platform.isAndroid) return "10.0.2.2";
+    return "localhost";
+  }
 
-  static String get ws => apiBase.replaceFirst('http', 'ws');
+  static String get api => "http://$_host:8000";
+  static String get ws => "ws://$_host:8000/ws";
 
-  static String get login => '$apiBase/users/login'; // dev mode
-  static String get register => '$apiBase/users/register'; // dev mode
-  static String get me => '$apiBase/users/me';
-
-  static String get rooms => '$apiBase/rooms';
-  static String get devices => '$apiBase/devices';
-  static String get sensors => '$apiBase/sensors';
-  static String get sensorValue => '$apiBase/sensors/value';
-
-  static String get socket => '$ws/ws';
+  // Auth0 (facultatif) – si activé côté FastAPI (AUTH_MODE=auth0)
+  static const auth0Domain =
+      String.fromEnvironment("AUTH0_DOMAIN", defaultValue: "");
+  static const auth0ClientId =
+      String.fromEnvironment("AUTH0_CLIENT_ID", defaultValue: "");
+  static const auth0Audience =
+      String.fromEnvironment("AUTH0_AUDIENCE", defaultValue: "");
+  static String get auth0RedirectUri => "com.example.gui://callback";
+  static String get auth0AuthorizeUrl => "https://$auth0Domain/authorize";
 }
