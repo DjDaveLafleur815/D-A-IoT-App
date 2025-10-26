@@ -3,6 +3,7 @@ Neo4j/data/
 Neo4j/logs/
 Neo4j/transactions/
 Neo4j/dbms/
+Neo4j/plugins/
 
 # Docker volumes
 */__pycache__/
