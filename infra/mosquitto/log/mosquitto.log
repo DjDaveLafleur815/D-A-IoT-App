@@ -26,3 +26,5 @@
 1761494582: New connection from 172.18.0.4:43723 on port 1883.
 1761494582: New client connected from 172.18.0.4:43723 as auto-1B52E3A5-4654-C8F7-DFF0-72D51312F69B (p2, c1, k60).
 1761496381: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1761498182: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1761499983: Saving in-memory database to /mosquitto/data//mosquitto.db.
