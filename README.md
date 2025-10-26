@@ -16,8 +16,8 @@ Plateforme domotique en temps réel basée sur FastAPI, Neo4j, MQTT et Flutter.
 - Flutter SDK
 
 ## Installation
-git clone https://github.com/<user>/D-A-IoT.git
-cd D-A-IoT-App
+git clone https://github.com/<user>/D-A-IoT.git␣␣
+cd D-A-IoT-App␣␣
 docker compose up --build
 
 ## Services
@@ -25,13 +25,13 @@ Swagger UI → http://localhost:8000/docs
 Neo4j Browser → http://localhost:7474  
 
 ## Flutter UI
-cd GUI
-flutter pub get
+cd GUI␣␣
+flutter pub get␣␣
 flutter run
 
 ## IoT Simulator
-cd simulator
-pip install -r requirements.txt
+cd simulator␣␣
+pip install -r requirements.txt␣␣
 python simulator.py
 
 ## Project structure
