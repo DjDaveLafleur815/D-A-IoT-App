@@ -1,165 +1,23 @@
-# =========================================================
-#  GLOBAL IGNORE
-# =========================================================
-# macOS
-.DS_Store
-.AppleDouble
-.LSOverride
+# Neo4j data
+Neo4j/data/
+Neo4j/logs/
+Neo4j/transactions/
+Neo4j/dbms/
 
-# Linux
-*~
-.cache/
-
-# Windows
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-
-# Node (si tu ajoutes un front web)
-node_modules/
-npm-debug.log
-
-# JetBrains / VSCode metadata
-.idea/
-.vscode/
-*.iml
-
-# Env vars
-.env
-*.env
-.env.*
-
-# Python virtualenvs
-.venv/
-venv/
-__pycache__/
+# Docker volumes
+*/__pycache__/
 *.pyc
 
-# Secrets
-*.pem
-*.key
-*.crt
-auth.ini
-id_rsa
-id_ed25519
+# Flutter
+GUI/build/
+GUI/.dart_tool/
+GUI/.flutter-plugins
 
-# Logs
-*.log
-log/
-logs/
+# IDE
+.vscode/
+.idea/
 
-# =========================================================
-#  DOCKER
-# =========================================================
-/docker-data/
-/docker-volumes/
-/data-volume/
-db_data/
-
-# Compose overrides
-docker-compose.override.yml
-
-# Generated data (keep config & plugins)
-Neo4j/data/
-!Neo4j/plugins/
-
-# Mosquitto
-infra/mosquitto/data/
-infra/mosquitto/log/
-
-# =========================================================
-#  FASTAPI
-# =========================================================
-FastAPI/__pycache__/
-FastAPI/.mypy_cache/
-FastAPI/.pytest_cache/
-
-# Compiled
-*.so
-*.pyd
-*.pyo
-
-# Reports/tests
-coverage/
-htmlcov/
-
-# =========================================================
-#  FLUTTER / GUI
-# =========================================================
-# Compiler output
-build/
-.obf/
-.flutter-plugins
-.flutter-plugins-dependencies
-
-# iOS
-**/DerivedData
-**/Pods/
-ios/Runner.xcworkspace/
-ios/Podfile.lock
-
-# Android
-android/.gradle/
-android/.idea/
-android/local.properties
-android/key.properties
-android/app/**/*.keystore
-android/app/**/*.jks
-
-# Flutter-specific
-pubspec.lock  # ← Optionnel : si tu versionnes les dépendances, enlève cette ligne
-.dart_tool/
-.packages
-.flutter-plugins
-.flutter-plugins-dependencies
-.melospackages
-
-# Web output
-web/.dart_tool/
-web/.dart_defines
-web/.firebase
-
-# Windows
-windows/Flutter/ephemeral/
-
-# MacOS
-macos/Flutter/ephemeral/
-
-# Linux
-linux/Flutter/ephemeral/
-
-# =========================================================
-#  SIMULATOR
-# =========================================================
-simulator/.venv
-simulator/__pycache__/
-
-# =========================================================
-#  MISC
-# =========================================================
-*.swp
-*.tmp
-*.bak
-*.orig
-*.lock
-
-# =========================================================
-#  GRAPHICS/BINARIES
-# =========================================================
-*.png~
-*.ico~
-*.xcf
-*.sketch
-*.ai
-*.psd
-*.xcf
-*.svg~
-
-# =========================================================
-#  SECURITY
-# =========================================================
-# ⚠️ Ne jamais commit :
-jwt_secret.txt
-jwt_private.key
-jwt_public.key
-firebase-admin.json
+# Python venv
+venv/
+.env
+FastAPI/.env
