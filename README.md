@@ -24,7 +24,7 @@ docker compose up --build
 
 ## Services
 Swagger UI → http://localhost:8000/docs  
-Neo4j Browser → http://localhost:7474  
+Neo4j Browser → http://localhost:7474/browser  
 
 ## Flutter UI
 cd GUI
