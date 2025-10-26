@@ -1,0 +1,8 @@
+1761490370: mosquitto version 2.0.22 starting
+1761490370: Config loaded from /mosquitto/config/mosquitto.conf.
+1761490370: Opening ipv4 listen socket on port 1883.
+1761490370: Opening ipv6 listen socket on port 1883.
+1761490370: Opening websockets listen socket on port 9001.
+1761490370: mosquitto version 2.0.22 running
+1761490651: mosquitto version 2.0.22 terminating
+1761490651: Saving in-memory database to /mosquitto/data//mosquitto.db.

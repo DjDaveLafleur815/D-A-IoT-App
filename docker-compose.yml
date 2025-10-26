@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  fastapi:
+    build: ./FastAPI
+    container_name: fastapi
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - neo4j
+      - mqtt
+
+  neo4j:
+    image: neo4j:5.21.2
+    container_name: neo4j
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      - NEO4J_AUTH=${NEO4J_USER}/${NEO4J_PASS}
+      - NEO4J_PLUGINS=["apoc"]
+    volumes:
+      - ./Neo4j/data:/data
+      - ./Neo4j/plugins:/plugins
+
+  mqtt:
+    image: eclipse-mosquitto:2
+    container_name: mqtt
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./infra/mosquitto/config:/mosquitto/config
+      - ./infra/mosquitto/data:/mosquitto/data
+      - ./infra/mosquitto/log:/mosquitto/log
+
+networks:
+  default:
+    name: d-a-iot
